@@ -8,7 +8,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.autoemocion.model.Car;
@@ -87,16 +86,29 @@ public class CarService {
 		
 		return imageUrl;
 	}
+	public static List<String> carUrl(){
+		Document doc = getOtomotoDoc();
+		List<String> urlList = new ArrayList<>();
+		Elements offertitleclass = doc.getElementsByClass("offer-title__link");
+		for (Element item : offertitleclass) {
+			String url = item.attr("href");
+			urlList.add(url);
+		}
+		
+		return urlList;
+		
+	}
 	
-	public static List<Car> listOfCars() throws IOException{
+	public  List<Car> listOfCars() throws IOException{
 		List<String> titles = getTitiles();
 		List<String> subtitles = getSubtitiles();
 		List<String> prices = getPrices();
 		List<String> descriptions = getDescription();
 		List<String> imgUrls = imageUrl();
 		List<Car> listofcars = new ArrayList<>();
+		List<String> urlList = carUrl();
 		for(int i=0; i<titles.size();i++){
-			Car car = new Car(titles.get(i),subtitles.get(i),descriptions.get(i),prices.get(i),imgUrls.get(i));
+			Car car = new Car(titles.get(i),subtitles.get(i),descriptions.get(i),prices.get(i),imgUrls.get(i),urlList.get(i));
 			listofcars.add(car);
 		}
 		

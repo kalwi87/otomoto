@@ -1,6 +1,6 @@
 package com.autoemocion.model;
 
-import org.springframework.stereotype.Component;
+
 
 
 public class Car {
@@ -9,15 +9,27 @@ public class Car {
 	private String description;
 	private String price;
 	private String imgaUrl;
+	private String carUrl;
 	
 	
-	public Car(String title, String subtitle, String description, String price, String imgaUrl) {
+	public Car(String title, String subtitle, String description, String price, String imgaUrl, String carUrl) {
 		
 		this.title = title;
 		this.subtitle = subtitle;
 		this.description = description;
 		this.price = price;
 		this.imgaUrl = imgaUrl;
+		this.carUrl = carUrl;
+	}
+
+
+	public String getCarUrl() {
+		return carUrl;
+	}
+
+
+	public void setCarUrl(String carUrl) {
+		this.carUrl = carUrl;
 	}
 
 
