@@ -27,8 +27,9 @@ public class CarService {
 	public static Document getOtomotoDoc() {
 		Document doc = null;
 		try {
-			doc = Jsoup.connect("https://autoemocion.otomoto.pl/").userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0").get();
-		} catch (IOException e) {
+			doc = Jsoup.connect("https://autoemocion.otomoto.pl/").userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36").proxy("37.187.100.23", 3128).get();
+			
+			} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
