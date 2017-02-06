@@ -8,14 +8,21 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.autoemocion.model.Car;
+import com.autoemocion.model.CarRepository;
+
+
 
 @Service
+@Transactional
 public class CarService {
 	
-	
+	@Autowired
+    CarRepository carRepo;
 	
 	public static Document getOtomotoDoc() {
 		Document doc = null;
@@ -115,6 +122,20 @@ public class CarService {
 		
 		return listofcars;
 		
+	}
+	
+
+	public void create(Car car){
+        carRepo.create(car);
+       
+    }
+	
+	public List<Car> findAll(){
+		return carRepo.findAll();
+		
+	}
+	public void deleteAll(){
+		carRepo.deleteAll();
 	}
 	
 	

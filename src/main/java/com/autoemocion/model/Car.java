@@ -1,9 +1,13 @@
 package com.autoemocion.model;
+import javax.persistence.*;
 
 
-
+@Entity
 
 public class Car {
+	@Id
+    @GeneratedValue
+    private Integer id;
 	private String title;
 	private String subtitle;
 	private String description;
@@ -11,7 +15,20 @@ public class Car {
 	private String imgaUrl;
 	private String carUrl;
 	
+	public Car(){
+		
+	}
 	
+	
+	public Car( Integer id,String title, String subtitle, String description, String price, String imgaUrl, String carUrl) {
+		this.id = id;
+		this.title = title;
+		this.subtitle = subtitle;
+		this.description = description;
+		this.price = price;
+		this.imgaUrl = imgaUrl;
+		this.carUrl = carUrl;
+	}
 	public Car(String title, String subtitle, String description, String price, String imgaUrl, String carUrl) {
 		
 		this.title = title;
@@ -87,6 +104,14 @@ public class Car {
 
 	public void setImgaUrl(String imgaUrl) {
 		this.imgaUrl = imgaUrl;
+	}
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 }
