@@ -15,35 +15,32 @@ import com.autoemocion.service.CarService;
 @RestController
 @RequestMapping("/cars")
 public class CarController {
-	
-	@Autowired
-	CarService carservice;
-	
 
-	
-	@GetMapping
-	public List<Car> getListOfCars() throws IOException{
-		return carservice.findAll();
-	}
-	@GetMapping
-	@RequestMapping("/save")
-	public String message() throws IOException{
-		carservice.deleteAll();
-		List<Car> cars = carservice.listOfCars();
-		for(Car car : cars){
-			carservice.create(car);
-		}
-		
-		return "succes";
-		
-	}
-	
-	@GetMapping
-	@RequestMapping("/clear")
-	public String deleteAll(){
-		carservice.deleteAll();
-		return "succes";
-	}
-	
+    private CarService carservice;
+    @Autowired
+    public CarController(CarService carservice) {
+        this.carservice = carservice;
+    }
+
+    @GetMapping
+    public List<Car> getListOfCars() throws IOException {
+        return carservice.findAll();
+    }
+
+    @GetMapping
+    @RequestMapping("/save")
+    public String message() throws IOException {
+        carservice.updateData();
+        return "succes";
+
+    }
+
+    @GetMapping
+    @RequestMapping("/clear")
+    public String deleteAll() {
+        carservice.deleteAll();
+        return "succes";
+    }
+
 
 }

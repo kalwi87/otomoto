@@ -3,11 +3,14 @@ package com.autoemocion.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
+import com.autoemocion.service.otomoto.OtomotoService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,131 +18,45 @@ import org.springframework.transaction.annotation.Transactional;
 import com.autoemocion.model.Car;
 import com.autoemocion.model.CarRepository;
 
+import javax.print.Doc;
 
 
 @Service
 @Transactional
 public class CarService {
-	
-	@Autowired
-    CarRepository carRepo;
-	
-	public static Document getOtomotoDoc() {
-		Document doc = null;
-		try {
-			doc = Jsoup.connect("https://autoemocion.otomoto.pl/").userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36").proxy("37.187.100.23", 3128).get();
-			
-			} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return doc;
 
-	}
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(CarService.class);
 
-	public static List<String> getTitiles() throws IOException {
-		List<String> titlelist = new ArrayList<String>();
-		Document doc = getOtomotoDoc();
-		Elements offertitleclass = doc.getElementsByClass("offer-title__link");
-		for (Element item : offertitleclass) {
-			String title = item.attr("title");
-			titlelist.add(title);
-		}
-		return titlelist;
-	}
+    private CarRepository carRepo;
+    private OtomotoService otomotoService;
 
-	public static List<String> getSubtitiles() {
-		List<String> subtitles = new ArrayList<String>();
-		Document doc = getOtomotoDoc();
-		Elements subtitiles = doc.getElementsByClass("offer-item__subtitle offer-item__subtitle--short");
-		for (Element item : subtitiles) {
-			subtitles.add(item.text());
-		}
-
-		return subtitles;
-	}
-
-	public static List<String> getPrices() {
-		List<String> priceslist = new ArrayList<String>();
-		Document doc = getOtomotoDoc();
-		Elements prices = doc.getElementsByClass("offer-price__number");
-		for (Element item : prices) {
-			priceslist.add(item.text());
-		}
-		
-		return priceslist;
-	}
-	public static List<String> getDescription() {
-		List<String> descriptionlist = new ArrayList<String>();
-		Document doc = getOtomotoDoc();
-		Elements prices = doc.getElementsByClass("offer-item__bottom-row ");
-		for (Element item : prices) {
-			descriptionlist.add(item.text());
-		}
-		
-		return descriptionlist;
-	}
-	
-	public static List<String> imageUrl(){
-		List<String> imageUrl = new ArrayList<String>();
-		Document doc = getOtomotoDoc();
-		Elements imagediv = doc.getElementsByClass("offer-item__photo-link");
-		
-		for(Element item : imagediv){
-			 String attr = item.attr("style");
-	            
-	            imageUrl.add(attr.substring( attr.indexOf("https://"), attr.indexOf(")") ) );
-		}
-
-		
-		return imageUrl;
-	}
-	public static List<String> carUrl(){
-		Document doc = getOtomotoDoc();
-		List<String> urlList = new ArrayList<>();
-		Elements offertitleclass = doc.getElementsByClass("offer-title__link");
-		for (Element item : offertitleclass) {
-			String url = item.attr("href");
-			urlList.add(url);
-		}
-		
-		return urlList;
-		
-	}
-	
-	public  List<Car> listOfCars() throws IOException{
-		List<String> titles = getTitiles();
-		List<String> subtitles = getSubtitiles();
-		List<String> prices = getPrices();
-		List<String> descriptions = getDescription();
-		List<String> imgUrls = imageUrl();
-		List<Car> listofcars = new ArrayList<>();
-		List<String> urlList = carUrl();
-		for(int i=0; i<titles.size();i++){
-			Car car = new Car(titles.get(i),subtitles.get(i),descriptions.get(i),prices.get(i),imgUrls.get(i),urlList.get(i));
-			listofcars.add(car);
-		}
-		
-		
-		return listofcars;
-		
-	}
-	
-
-	public void create(Car car){
-        carRepo.create(car);
-       
+    public CarService(CarRepository carRepo, OtomotoService otomotoService) {
+        this.carRepo = carRepo;
+        this.otomotoService = otomotoService;
     }
-	
-	public List<Car> findAll(){
-		return carRepo.findAll();
-		
-	}
-	public void deleteAll(){
-		carRepo.deleteAll();
-	}
-	
-	
-	
+
+    public void create(Car car) {
+        carRepo.create(car);
+    }
+
+    public List<Car> findAll() {
+        return carRepo.findAll();
+    }
+
+    public void deleteAll() {
+        carRepo.deleteAll();
+    }
+    public void updateData(){
+        carRepo.deleteAll();
+        List<Car> cars = null;
+        try {
+            cars = otomotoService.listOfCars();
+        } catch (IOException e) {
+            LOG.warn(e.getMessage());
+        }
+        for (Car car : cars) {
+            carRepo.create(car);
+        }
+    }
 
 }

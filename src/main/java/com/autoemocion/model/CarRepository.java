@@ -25,7 +25,7 @@ public class CarRepository {
 	    }
 	 
 	 public void deleteAll(){
-		 em.createNativeQuery("DELETE FROM CAR").executeUpdate();
+		 em.createNativeQuery("TRUNCATE CAR").executeUpdate();
 	 }
 
 }

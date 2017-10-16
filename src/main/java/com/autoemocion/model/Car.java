@@ -3,20 +3,26 @@ import javax.persistence.*;
 
 
 @Entity
-
 public class Car {
+
+
 	@Id
     @GeneratedValue
     private Integer id;
+
 	private String title;
+
 	private String subtitle;
+
 	private String description;
+
 	private String price;
+
 	private String imgaUrl;
+
 	private String carUrl;
 	
 	public Car(){
-		
 	}
 	
 	
