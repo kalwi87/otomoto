@@ -22,7 +22,7 @@ public class CarController {
     public CarController(CarService carservice) {
         this.carservice = carservice;
     }
-    @CrossOrigin(origins = "http://autoemocion.pl/")
+    @CrossOrigin
     @GetMapping
     public List<Car> getListOfCars() throws IOException {
         return carservice.findAll();
